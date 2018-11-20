@@ -4,12 +4,38 @@
 
 module.exports=function (app,connection) {
 
+    function on9(req) {
+    //    fetch session
+        if (req.session.online){
+            return true;
+        }
+        else{
+            return false;
+        }
+    }
+
+    app.post('/logout',function (req,res) {
+
+        req.session.online = false;
+
+        var sess = req.session;
+        console.log(sess);
+        res.render('index',{data: sess});
+    });
+
+    app.post('/temp',function (req,res) {
+        res.render('signup');
+
+    });
+
     app.get('/',function (req,res) {
-       res.render('login');
+        if(on9(req)){
+           res.render('index', {data: req.session});
+       }
+       req.session.online=false;
+       res.render('index',{data:req.session});
     });
-    app.post('/signup',function (req,res) {
-       res.render('signup');
-    });
+
     app.post('/submitSign',function (req,res) {
         var email=req.body.email;
         var password=req.body.password;
@@ -20,13 +46,29 @@ module.exports=function (app,connection) {
                 console.log('db error');
             }
         });
-  var values='insert into users(email,password) values(' + "'"+email+"'" +','+"'"+password +"'"+');';
-  console.log(values);
-  connection.query(values);
+
+        connection.query("SELECT * FROM users WHERE email = ? ",[email] ,function (err,result,fields) {
+            if(result.length>0){
+            if(result[0].email==email)
+            {
+              res.render('already');
+            }}
+            else {
+
+
+                var values = 'insert into users(email,password) values(' + "'" + email + "'" + ',' + "'" + password + "'" + ');';
+                console.log(values);
+                connection.query(values);
+                req.session.online = false;
+                var sess = req.session;
+                console.log(sess);
+                res.render('index', {data: sess});
+            }
+        });
 
     });
 
-    app.get('/dd',function (req,res) {
+    app.post('/dd',function (req,res) {
       res.render('form');
     });
 
@@ -65,9 +107,9 @@ module.exports=function (app,connection) {
 
         connection.query("SELECT * FROM users WHERE email = ? ",[email] ,function (err,result,fields) {
 
-            if(err)
+            if(result[0].email!=email)
             {
-                console.log('error 1');
+                res.render('already');
             }
            else
             {
@@ -117,6 +159,12 @@ module.exports=function (app,connection) {
               if(result[0].password==password)
               {
                   console.log('matched');
+                  req.session.email = email;
+                  req.session.online = true;
+
+                  var sess = req.session;
+                  console.log(sess);
+                  res.render('index',{data: sess});
               }
               else{
                   res.send({
@@ -127,5 +175,6 @@ module.exports=function (app,connection) {
           });
 
        });
+
    });
 };

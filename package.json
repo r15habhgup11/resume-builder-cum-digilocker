@@ -5,6 +5,8 @@
     "body-parser": "*",
     "ejs": "*",
     "express": "*",
-    "mysql": "*"
+    "express-session": "^1.15.6",
+    "mysql": "*",
+    "nodemon": "^1.18.6"
   }
 }

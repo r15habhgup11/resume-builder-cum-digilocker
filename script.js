@@ -3,11 +3,17 @@
  */
 var express=require('express');
 var mysql=require('mysql');
+var session = require('express-session');
 var app=express();
 var bodyParser=require('body-parser');
 
+app.use(session({secret: 'SE-Project'}));
+
+
 var indexcontroller=require('./controllers/indexcontroller');
+
 app.use(bodyParser.urlencoded({extended:true}));
+
 var connection=mysql.createConnection({
 
     host:'localhost',
