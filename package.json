@@ -1,0 +1,10 @@
+{
+  "name": "clgproject",
+  "version": "0.0.1",
+  "dependencies": {
+    "body-parser": "*",
+    "ejs": "*",
+    "express": "*",
+    "mysql": "*"
+  }
+}
