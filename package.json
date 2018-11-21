@@ -6,6 +6,7 @@
     "ejs": "*",
     "express": "*",
     "express-session": "^1.15.6",
+    "formidable": "^1.2.1",
     "mysql": "*",
     "nodemon": "^1.18.6"
   }

@@ -3,7 +3,6 @@
  */
 
 module.exports=function (app,connection) {
-
     function on9(req) {
     //    fetch session
         if (req.session.online){
