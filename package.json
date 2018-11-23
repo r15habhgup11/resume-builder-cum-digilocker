@@ -5,6 +5,7 @@
     "body-parser": "*",
     "ejs": "*",
     "express": "*",
+    "express-fileupload": "^1.0.0",
     "express-session": "^1.15.6",
     "formidable": "^1.2.1",
     "mysql": "*",

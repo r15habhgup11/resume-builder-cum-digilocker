@@ -1,8 +1,11 @@
 /**
  * Created by rishabh on 18/11/18.
  */
+
 var express=require('express');
 var mysql=require('mysql');
+var upload = require('express-fileupload');
+const http = require('http');
 var session = require('express-session');
 var app=express();
 var bodyParser=require('body-parser');
@@ -37,6 +40,7 @@ var connection=mysql.createConnection({
 
  app.set('view engine','ejs');
  app.use(express.static('./public'));
+app.use(upload());
  indexcontroller(app,connection);
 
  app.listen(3000,function () {

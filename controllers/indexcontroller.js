@@ -1,7 +1,7 @@
 /**
  * Created by rishabh on 18/11/18.
  */
-
+var fs=require('fs');
 module.exports=function (app,connection) {
     function on9(req) {
     //    fetch session
@@ -12,6 +12,57 @@ module.exports=function (app,connection) {
             return false;
         }
     }
+
+    app.get('/mydoc',function (req,res) {
+        res.render('document',);
+    });
+
+
+    app.get('/up',function (req,res) {
+        res.render('upload');
+    });
+
+    app.post('/upload',function (req,res) {
+
+      var email=req.session.email;
+
+        email=email.slice(0,email.length-10);
+
+        var newdir =__dirname+'/../public/uploads/'+ email ;
+        console.log(newdir);
+
+        if (!fs.existsSync(newdir)) {
+            fs.mkdirSync(newdir);
+        }
+
+        console.log(newdir);
+
+            console.log(req.files);
+            if(req.files.upfile){
+                var file = req.files.upfile,
+                    name = file.name,
+                    type = file.mimetype;
+                var uploadpath = newdir + '/'+name;
+                file.mv(uploadpath,function(err){
+                    if(err){
+                        console.log("File Upload Failed",name,err);
+
+                    }
+                    else {
+                        console.log("File Uploaded",name);
+
+                    }
+                });
+            }
+            else {
+                res.end();
+            };
+
+        var sess = req.session;
+        console.log(sess);
+        res.render('index', {data: sess});
+
+    });
 
     app.post('/logout',function (req,res) {
 
@@ -176,4 +227,6 @@ module.exports=function (app,connection) {
        });
 
    });
+
+
 };
