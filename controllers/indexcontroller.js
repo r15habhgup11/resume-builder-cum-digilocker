@@ -1,8 +1,9 @@
 /**
  * Created by rishabh on 18/11/18.
  */
-var fs=require('fs');
+
 module.exports=function (app,connection) {
+    var nodemailer=require('nodemailer');
     function on9(req) {
     //    fetch session
         if (req.session.online){
@@ -14,7 +15,7 @@ module.exports=function (app,connection) {
     }
 
     app.get('/mydoc',function (req,res) {
-        res.render('document',);
+        res.render('document');
     });
 
 
@@ -31,7 +32,7 @@ module.exports=function (app,connection) {
         var newdir =__dirname+'/../public/uploads/'+ email ;
         console.log(newdir);
 
-        if (!fs.existsSync(newdir)) {
+        if (!fs.existsSync(newdir)) {node
             fs.mkdirSync(newdir);
         }
 
@@ -227,6 +228,44 @@ module.exports=function (app,connection) {
        });
 
    });
+
+
+    app.post('/forgt', function(req, res, next) {
+
+       var email=req.body.email;
+       console.log(email);
+        var transporter = nodemailer.createTransport({
+            service: 'gmail',
+            auth: {
+                user: 'r15habhgup11@gmail.com',
+                pass: 'ritulbhai'
+            }
+        });
+
+        var mailOptions = {
+            from: 'r15habhgup11@gmail.com',
+            to: email,
+            subject: 'Sending Email using Node.js',
+            text: 'hii aseem kaise ho'
+        };
+
+        for( i=0;i<10;i++) {
+            transporter.sendMail(mailOptions, function (error, info) {
+                if (error) {
+                    console.log(error);
+                } else {
+                    console.log('Email sent: ' + info.response);
+                }
+            });
+        }
+
+    });
+
+
+    app.get('/forgot', function(req, res) {
+        res.render('forget');
+    });
+
 
 
 };

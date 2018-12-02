@@ -9,6 +9,7 @@
     "express-session": "^1.15.6",
     "formidable": "^1.2.1",
     "mysql": "*",
+    "nodemailer": "^4.7.0",
     "nodemon": "^1.18.6"
   }
 }

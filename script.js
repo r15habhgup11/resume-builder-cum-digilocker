@@ -1,7 +1,7 @@
 /**
  * Created by rishabh on 18/11/18.
  */
-
+var nodemailer=require('nodemailer');
 var express=require('express');
 var mysql=require('mysql');
 var upload = require('express-fileupload');
