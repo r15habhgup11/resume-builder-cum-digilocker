@@ -269,8 +269,13 @@ module.exports=function (app,connection) {
         var transporter = nodemailer.createTransport({
             service: 'gmail',
             auth: {
+<<<<<<< HEAD
                 user: 'r15habhgup11@gmail.com',
                 pass: 'password'
+=======
+                user: 'ryouremail',
+                pass: 'yourpassword'
+>>>>>>> ca7ba1f3ebf86bf8599d4907a27279c50d14067e
             }
         });
 
