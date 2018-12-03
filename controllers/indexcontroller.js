@@ -1,6 +1,7 @@
 /**
  * Created by rishabh on 18/11/18.
  */
+var fs=require('fs');
 
 module.exports=function (app,connection) {
     var nodemailer=require('nodemailer');
@@ -10,62 +11,96 @@ module.exports=function (app,connection) {
             return true;
         }
         else{
-            return false;
+           return false;
         }
     }
 
-    app.get('/mydoc',function (req,res) {
-        res.render('document');
+    app.get('/error',function (req,res) {
+        res.render('error');
+
     });
 
+    app.get('/mydoc',function (req,res) {
+        if(!on9(req)){
+            res.render('error');
+        }
+        else {
+            var email = req.session.email;
+
+            var username = email.slice(0, email.length - 10);
+
+            connection.query("SELECT * FROM upload WHERE username = ? ", [username], function (err, result, fields) {
+
+                console.log(result);
+                console.log(result.length);
+                console.log(result[0].path);
+
+                res.render('mydoc', {data: result, username: username});
+            });
+        }
+
+    });
 
     app.get('/up',function (req,res) {
-        res.render('upload');
+        if(!on9(req)){
+            res.render('error');
+        }
+
+        else {
+        res.render('upload');}
     });
 
     app.post('/upload',function (req,res) {
 
-      var email=req.session.email;
 
-        email=email.slice(0,email.length-10);
 
-        var newdir =__dirname+'/../public/uploads/'+ email ;
-        console.log(newdir);
 
-        if (!fs.existsSync(newdir)) {node
-            fs.mkdirSync(newdir);
-        }
+            var email = req.session.email;
 
-        console.log(newdir);
+            username = email.slice(0, email.length - 10);
+
+            var newdir = __dirname + '/../public/uploads/' + username;
+            console.log(newdir);
+
+            if (!fs.existsSync(newdir)) {
+                fs.mkdirSync(newdir);
+            }
+
+            console.log(newdir);
 
             console.log(req.files);
-            if(req.files.upfile){
+            if (req.files.upfile) {
                 var file = req.files.upfile,
                     name = file.name,
                     type = file.mimetype;
-                var uploadpath = newdir + '/'+name;
-                file.mv(uploadpath,function(err){
-                    if(err){
-                        console.log("File Upload Failed",name,err);
+                var uploadpath = newdir + '/' + name;
+                file.mv(uploadpath, function (err) {
+                    if (err) {
+                        console.log("File Upload Failed", name, err);
 
                     }
                     else {
-                        console.log("File Uploaded",name);
+                        console.log("File Uploaded", name);
 
                     }
                 });
+
+                var values = 'insert into upload(username,path) values(' + "'" + username + "'" + ',' + "'" + name + "'" + ');';
+                connection.query(values);
             }
             else {
                 res.end();
-            };
+            }
+            ;
 
-        var sess = req.session;
-        console.log(sess);
-        res.render('index', {data: sess});
+
+            var sess = req.session;
+            console.log(sess);
+            res.render('index', {data: sess});
 
     });
 
-    app.post('/logout',function (req,res) {
+    app.get('/logout',function (req,res) {
 
         req.session.online = false;
 
@@ -218,10 +253,7 @@ module.exports=function (app,connection) {
                   res.render('index',{data: sess});
               }
               else{
-                  res.send({
-                      "code":404,
-                      "success":"not found"
-                  });
+                  res.render('error');
               }
           });
 
@@ -238,7 +270,7 @@ module.exports=function (app,connection) {
             service: 'gmail',
             auth: {
                 user: 'r15habhgup11@gmail.com',
-                pass: 'ritulbhai'
+                pass: 'password'
             }
         });
 

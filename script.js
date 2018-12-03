@@ -42,7 +42,6 @@ var connection=mysql.createConnection({
  app.use(express.static('./public'));
 app.use(upload());
  indexcontroller(app,connection);
-
  app.listen(3000,function () {
     console.log('connected') ;
  });
